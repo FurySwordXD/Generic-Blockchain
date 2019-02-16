@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body class="w3-black w3-content">
+
+    <div>
+    <form class="w3-content w3-padding-large">
+        <h3>Response: </h3>
+        <textarea class="w3-input" readonly id="response"></textarea>
+        <br>
+        <button type="button" class="w3-button w3-teal" id="clearBtn">Clear</button>
+        <br>
+        <i class="fa fa-spinner w3-spin w3-center" style="font-size:64px" id="loader"></i>
+        <br>
+        <label>Address: </label><i>(Example: 192.168.1.10/localhost)</i>
+        <input class="w3-input w3-border" type="text" id="address">
+        <label>Port: </label><i>(Example: 5001)</i>
+        <input class="w3-input w3-border" type="number" id="port">
+        <br>
+        <button type="button" class="w3-button w3-teal" id="getNodesBtn">Get Nodes</button>
+        <button type="button" class="w3-button w3-teal" id="getTransBtn">Get Transactions</button>
+        <button type="button" class="w3-button w3-teal" id="getChainBtn">Get Blockchain</button>
+        <button type="button" class="w3-button w3-teal" id="mineBtn">Mine</button>
+    </form>
+
+    <hr>
+
+    <form class="w3-content w3-padding-large" id="nodesForm">
+        <label>Node Address: </label><i>(Example: http://192.168.1.10:5001)</i>
+        <input class="w3-input w3-border" type="text" name="nodes" id="nodes">
+        <br>       
+        <button type="button" class="w3-button w3-teal" id="addNodesBtn">Add Nodes</button>
+    </form>
+
+    <hr>
+
+    <form class="w3-content w3-padding-large" id="transactionForm" enctype="application/json">
+        {% for d in data %}
+            <label>{{d}}: </label>
+            <input class="w3-input w3-border" type="text" name="{{d}}" id="{{d}}">
+        {% endfor %}
+            <br>
+            <button type="button" class="w3-button w3-teal" id="addTransBtn">Add Transaction</button>        
+    </form>
+
+    <script>
+        $("#loader").hide();
+        $("#clearBtn").click(function(){
+            $("#response").val("");
+        });
+        $("#getTransBtn").click(function(){
+            destination = "http://" + $("#address").val() +":"+ $("#port").val();
+            $("#loader").show();
+            $.ajax({
+                type: "GET",
+                url:  destination + "/transactions",
+                success: function(response) {
+                    console.log(response);
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+        });
+        $("#getNodesBtn").click(function(){
+            destination = "http://" + $("#address").val() +":"+ $("#port").val();
+            $("#loader").show();
+            $.ajax({
+                type: "GET",
+                url: destination + "/nodes",
+                success: function(response) {
+                    console.log(response)
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+        });
+        $("#mineBtn").click(function() {
+            destination = "http://" + $("#address").val() +":"+ $("#port").val();
+            $("#loader").show();
+            $.ajax({
+                type: "GET",
+                url: destination + "/mine",
+                success: function(response) {
+                    console.log(response);
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+        });
+        $("#getChainBtn").click(function(){
+            destination = "http://" + $("#address").val() +":"+ $("#port").val();
+            $("#loader").show();
+            $.ajax({
+                type: "GET",
+                url: destination + "/chain",
+                success: function(response) {
+                    console.log(response)
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+        });
+
+        function ConvertFormToJSON(form){
+            var array = jQuery(form).serializeArray();
+            var json = {};
+            
+            jQuery.each(array, function() {
+                json[this.name] = this.value || '';
+            });
+            
+            return json;
+        }
+
+        $("#addTransBtn").click(function(){
+            destination = "http://" + $("#address").val() +":"+ $("#port").val();
+            $("#loader").show();
+            var object = ConvertFormToJSON($("#transactionForm"));
+            console.log(object);
+            $.ajax({
+                type: "POST",
+                url: destination + "/transactions/new",
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(object),
+                success: function(response) {
+                    console.log(response);
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+        });
+
+        $("#addNodesBtn").click(function(){
+            destination = "http://" + $("#address").val() +":"+ $("#port").val();
+            $("#loader").show();
+            var source = $("#nodes").val();
+            var object = { "nodes" : [destination], "flag": 1};
+            console.log(object);
+            $.ajax({
+                type: "POST",
+                url: source + "/nodes/register",
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(object),
+                success: function(response) {
+                    console.log(response);
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+            object = { "nodes" : [source], "flag": 1};
+            $.ajax({
+                type: "POST",
+                url: destination + "/nodes/register",
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(object),
+                success: function(response) {
+                    console.log(response);
+                    $("#response").val(JSON.stringify(response, null, "\t"));
+                    $("#loader").hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

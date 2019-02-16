@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Blockchain</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <!-- Navbar (sit on top) -->
+        <div class="w3-top">
+            <div class="w3-bar" id="myNavbar">
+                <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
+                <i class="fa fa-bars"></i>
+                </a>
+                <a href="#home" class="w3-bar-item w3-button w3-ripple w3-text-white w3-hover-teal"><i class="fa fa-home"></i> HOME</a>
+                <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-ripple w3-text-white w3-hover-teal"><i class="fa fa-user"></i> ABOUT</a>
+                <a href="#portfolio" class="w3-bar-item w3-button w3-hide-small w3-ripple w3-text-white w3-hover-teal"><i class="fa fa-envelope"></i> VOTE</a>
+                <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-ripple w3-text-white w3-hover-teal"><i class="fa fa-th"></i> CHAIN</a>
+            </div>
+
+            <!-- Navbar on small screens -->
+            <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium ">
+                <a href="#about" class="w3-bar-item w3-button w3-ripple" onclick="toggleFunction()">ABOUT</a>
+                <a href="#portfolio" class="w3-bar-item w3-button w3-ripple" onclick="toggleFunction()">VOTE</a>
+                <a href="#contact" class="w3-bar-item w3-button w3-ripple" onclick="toggleFunction()">CHAIN</a>
+            </div>
+        </div>
+
+        <!-- First Parallax Image with Logo Text -->
+        <div class="bgimg-1 w3-opacity-min" id = "home">
+            <div class="w3-display-middle" style="white-space:nowrap;">
+                <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide w3-animate-opacity">BLOCK CHAIN - VOTING</span>
+            </div>
+        </div>
+
+        <!-- Container (About Section) -->
+        <div class="w3-content w3-container w3-padding-64" id="about">
+            <h3 class="w3-center w3-text-teal">ABOUT THE CHAIN</h3>
+            <p class="w3-center">Immutable! Secure! Anonymous!</p>
+            <br>
+            <form class="w3-content w3-container w3-padding-large w3-card-4">
+                <div class="w3-content w3-center">
+                    <label>Get a block with your private key</label><br>
+                </div>
+                <div id="voteVerify" class="w3-text-white"></div>
+                <label>Private Key:</label>
+                <input id="private_key" class="w3-input w3-border-0 w3-text-white" style="background-color: #454545;" type="text">
+                <br>
+                <div class="w3-content w3-center">
+                    <button class="w3-button w3-black w3-hover-teal" type="button" id="getBlockBtn">Get Block</button>
+                    &nbsp;
+                    <button class="w3-button w3-black w3-hover-teal" type="reset">Clear</button>
+                </div>
+                <br>Your Data:
+                <textarea id="blockresponse" class="w3-input w3-border-0 w3-text-white" style="background-color: #454545;" readonly></textarea>
+            </form>
+
+            
+        </div>
+
+        <div class="w3-row w3-center w3-dark-grey w3-padding-16">
+            <div class="w3-quarter w3-section">
+                <span class="w3-xlarge"></span><br>
+            </div>
+        </div>
+
+        <!-- Second Parallax Image with Vote Text -->
+        <div class="bgimg-2 w3-display-container w3-opacity-min" id="portfolio">
+            <div class="w3-display-middle" style="white-space:nowrap;">
+                <span class="w3-xxlarge w3-black w3-text-white w3-wide w3-center w3-padding-large w3-animate-opacity">VOTE</span>
+            </div>
+        </div>
+
+        <!-- Container (Vote Section) -->
+        <div class="w3-content w3-container w3-padding-64" >
+            <h3 class="w3-center w3-text-teal">ADD YOUR INFO TO THE CHAIN</h3>
+            <form class="w3-card-4 w3-padding w3-container" id="transactionForm">
+                <br>
+                {% for d in data %}
+                    <label>{{d.upper()}}: </label>
+                    <input class="w3-input" type="text" name="{{d}}" id="{{d}}"><br>
+                {% endfor %}
+                <div class="w3-containter w3-center">
+                    <button type="button" class="w3-button w3-black w3-hover-teal w3-ripple w3-text-large w3-wide" id="addTransBtn">SUBMIT</button>
+                </div>
+            </form>
+            <br><br>
+        </div>
+
+        <div class="w3-row w3-center w3-dark-grey w3-padding-16">
+            <div class="w3-quarter w3-section">
+                <span class="w3-xlarge"></span><br>
+            </div>
+        </div>
+
+        <!-- Third Parallax Image with Portfolio Text -->
+        <div class="bgimg-3 w3-display-container w3-opacity-min" id="contact">
+            <div class="w3-display-middle">
+                <span class="w3-xxlarge w3-black w3-text-white w3-wide w3-center w3-padding-large w3-animate-opacity">BLOCKCHAIN</span>
+            </div>
+        </div>
+
+        <!-- Container (Contact Section) -->
+        <div class="w3-content w3-container w3-padding-64">
+            <h3 class="w3-center  w3-text-teal">GET THE CHAIN</h3>
+            <p class="w3-center"><em>View the entire blockchain information</em></p>
+            <textarea id="response" class="w3-input w3-border-0 w3-text-white" style="background-color: #454545;" readonly></textarea>
+            <br>
+            <div class="w3-container w3-center">
+                <button type="button" class="w3-button w3-ripple w3-black w3-ripple w3-hover-teal" id="getChainBtn">Grab</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
+            <a href="#home" class="w3-button"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+            <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+        </footer>
+
+        <script>
+
+            window.onscroll = function() {myFunction()};
+
+            function myFunction() {
+                var navbar = document.getElementById("myNavbar");
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    navbar.className = "w3-bar" + " w3-card" + " w3-animate-top" + " w3-black";
+                } else {
+                    navbar.className = navbar.className.replace(" w3-card w3-animate-top w3-black", "");
+                }
+            }
+
+            // Used to toggle the menu on small screens when clicking on the menu button
+            function toggleFunction() {
+                var x = document.getElementById("navDemo");
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                }
+            }
+
+            $("#getBlockBtn").click(function(){
+                destination = "http://{{ipaddress}}:{{port}}";
+                $.ajax({
+                    type: "GET",
+                    url: destination + "/block/" + $("#private_key").val(),
+                    success: function(response) {
+                        console.log(response);
+                        $("#blockresponse").val(JSON.stringify(response, null, "\t"));
+                    }
+                });
+            });
+
+            $("#getChainBtn").click(function(){
+                destination = "http://{{ipaddress}}:{{port}}";
+                $.ajax({
+                    type: "GET",
+                    url: destination + "/chain",
+                    success: function(response) {
+                        console.log(response);
+                        $("#response").val(JSON.stringify(response, null, "\t"));
+                    }
+                });
+            });
+            
+            function ConvertFormToJSON(form){
+                var array = jQuery(form).serializeArray();
+                var json = {};
+                
+                jQuery.each(array, function() {
+                    json[this.name] = this.value || '';
+                });
+                
+                return json;
+            }
+
+            $("#addTransBtn").click(function(){
+                destination = "http://{{ipaddress}}:{{port}}";
+                var object = ConvertFormToJSON($("#transactionForm"));
+                console.log(object);
+                $.ajax({
+                    type: "POST",
+                    url: destination + "/transactions/new",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify(object),
+                    success: function(response) {
+                        console.log(response);
+                        alert(response.message);
+                    }
+                });
+            });
+
+        </script>
+
+</body>
+</html>

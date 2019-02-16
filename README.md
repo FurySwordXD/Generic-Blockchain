@@ -1,6 +1,4 @@
 # Generic-Blockchain
-A blockchain made in python which can be easily adapted to hold any type of data structure
-
 All forms and validations are dynamically generated based on the variables names' in the class Data available in block_data.py
 So all you need to do is modify this class as per your requirement and your blockchain will hold data in that structure.
 
